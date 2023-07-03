@@ -113,12 +113,12 @@ resource "aws_wafv2_web_acl" "main" {
           content {
             arn = lookup(rule_group_reference_statement.value, "arn")
 
-#            dynamic "excluded_rule" {
-#              for_each = length(lookup(rule_group_reference_statement.value, "excluded_rule", {})) == 0 ? [] : toset(lookup(rule_group_reference_statement.value, "excluded_rule"))
-#              content {
-#                name = excluded_rule.value
-#              }
-#            }
+            dynamic "excluded_rule" {
+              for_each = length(lookup(rule_group_reference_statement.value, "excluded_rule", {})) == 0 ? [] : toset(lookup(rule_group_reference_statement.value, "excluded_rule"))
+              content {
+                name = excluded_rule.value
+              }
+            }
           }
         }
 
@@ -2110,12 +2110,12 @@ resource "aws_wafv2_web_acl" "main" {
                 }
               }
             }
-#            positional_constraint = lookup(byte_match_statement.value, "positional_constraint")
-#            search_string         = lookup(byte_match_statement.value, "search_string")
-#            text_transformation {
-#              priority = lookup(byte_match_statement.value["text_transformation"], "priority")
-#              type     = lookup(byte_match_statement.value["text_transformation"], "type")
-#           }
+            positional_constraint = lookup(byte_match_statement.value, "positional_constraint")
+            search_string         = lookup(byte_match_statement.value, "search_string")
+            text_transformation {
+              priority = lookup(byte_match_statement.value["text_transformation"], "priority")
+              type     = lookup(byte_match_statement.value["text_transformation"], "type")
+           }
           }
         }
 
@@ -6839,12 +6839,12 @@ resource "aws_wafv2_web_acl_logging_configuration" "main" {
         }
       }
 
-#      dynamic "single_query_argument" {
-#        for_each = length(lookup(redacted_fields.value, "single_query_argument", {})) == 0 ? [] : [lookup(redacted_fields.value, "single_query_argument", {})]
-#        content {
-#          name = lookup(single_query_argument.value, "name", null)
-#        }
-#      }
+      dynamic "single_query_argument" {
+        for_each = length(lookup(redacted_fields.value, "single_query_argument", {})) == 0 ? [] : [lookup(redacted_fields.value, "single_query_argument", {})]
+        content {
+          name = lookup(single_query_argument.value, "name", null)
+        }
+      }
     }
   }
 
