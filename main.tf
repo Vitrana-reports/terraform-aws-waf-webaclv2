@@ -113,15 +113,24 @@ resource "aws_wafv2_web_acl" "main" {
           content {
             name        = lookup(managed_rule_group_statement.value, "name")
             vendor_name = lookup(managed_rule_group_statement.value, "vendor_name", "AWS")
-
-            dynamic "excluded_rule" {
-              for_each = length(lookup(managed_rule_group_statement.value, "excluded_rule", {})) == 0 ? [] : toset(lookup(managed_rule_group_statement.value, "excluded_rule"))
+  
+#            dynamic "excluded_rule" {
+#              for_each = length(lookup(managed_rule_group_statement.value, "excluded_rule", {})) == 0 ? [] : toset(lookup(managed_rule_group_statement.value, "excluded_rule"))
+#              content {
+#                name = excluded_rule.value
+#              }
+#            }
+           dynamic rule_action_override {
+              for_each = rule.value.excluded_rules
               content {
-                name = excluded_rule.value
+                action_to_use {
+                  count {}
+                }
+                name = rule_action_override.value
               }
-            }
+            } 
          }
-      }
+        }
 
         dynamic "managed_rule_group_statement" {
           for_each = length(lookup(rule.value, "managed_rule_group_statement", {})) == 0 ? [] : [lookup(rule.value, "managed_rule_group_statement", {})]
@@ -6840,12 +6849,6 @@ resource "aws_wafv2_web_acl_logging_configuration" "main" {
         }
       }
 
-      dynamic "single_query_argument" {
-        for_each = length(lookup(redacted_fields.value, "single_query_argument", {})) == 0 ? [] : [lookup(redacted_fields.value, "single_query_argument", {})]
-        content {
-          name = lookup(single_query_argument.value, "name", null)
-        }
-      }
     }
   }
 
