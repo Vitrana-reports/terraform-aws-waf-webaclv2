@@ -113,12 +113,12 @@ resource "aws_wafv2_web_acl" "main" {
           content {
             arn = lookup(rule_group_reference_statement.value, "arn")
 
-            dynamic "excluded_rule" {
-              for_each = length(lookup(rule_group_reference_statement.value, "excluded_rule", {})) == 0 ? [] : toset(lookup(rule_group_reference_statement.value, "excluded_rule"))
-              content {
-                name = excluded_rule.value
-              }
-            }
+#            dynamic "excluded_rule" {
+#              for_each = length(lookup(rule_group_reference_statement.value, "excluded_rule", {})) == 0 ? [] : toset(lookup(rule_group_reference_statement.value, "excluded_rule"))
+#              content {
+#                name = excluded_rule.value
+#              }
+#            }
           }
         }
 
