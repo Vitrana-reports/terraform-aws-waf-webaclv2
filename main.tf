@@ -107,21 +107,18 @@ resource "aws_wafv2_web_acl" "main" {
       }
 
       statement {
-
         dynamic "managed_rule_group_statement" {
-          for_each = lookup(rule.value, "statement", null) != null ? [rule.value.statement] : []
+          for_each = length(lookup(rule.value, "managed_rule_group_statement", {})) == 0 ? [] : [lookup(rule.value, "managed_rule_group_statement", {})]
           content {
-            name        = managed_rule_group_statement.value.name
-            vendor_name = managed_rule_group_statement.value.vendor_name
+            name        = lookup(managed_rule_group_statement.value, "name")
+            vendor_name = lookup(managed_rule_group_statement.value, "vendor_name", "AWS")
 
             dynamic "excluded_rule" {
-              for_each = lookup(managed_rule_group_statement.value, "excluded_rule", null) != null ? toset(managed_rule_group_statement.value.excluded_rule) : []
+              for_each = length(lookup(managed_rule_group_statement.value, "excluded_rule", {})) == 0 ? [] : toset(lookup(managed_rule_group_statement.value, "excluded_rule"))
               content {
                 name = excluded_rule.value
               }
             }
-          }
-        }
 
         dynamic "managed_rule_group_statement" {
           for_each = length(lookup(rule.value, "managed_rule_group_statement", {})) == 0 ? [] : [lookup(rule.value, "managed_rule_group_statement", {})]
